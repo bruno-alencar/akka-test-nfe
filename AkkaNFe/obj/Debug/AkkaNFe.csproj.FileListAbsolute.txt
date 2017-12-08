@@ -10,3 +10,14 @@ D:\Works\opensource\AkkaNFe\AkkaNFe\bin\Debug\System.Collections.Immutable.xml
 D:\Works\opensource\AkkaNFe\AkkaNFe\obj\Debug\AkkaNFe.csprojResolveAssemblyReference.cache
 D:\Works\opensource\AkkaNFe\AkkaNFe\obj\Debug\AkkaNFe.exe
 D:\Works\opensource\AkkaNFe\AkkaNFe\obj\Debug\AkkaNFe.pdb
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\AkkaNFe.exe.config
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\AkkaNFe.exe
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\AkkaNFe.pdb
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\Akka.dll
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\Newtonsoft.Json.dll
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\System.Collections.Immutable.dll
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\Akka.xml
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\Newtonsoft.Json.xml
+C:\works\akka-test-nfe\AkkaNFe\bin\Debug\System.Collections.Immutable.xml
+C:\works\akka-test-nfe\AkkaNFe\obj\Debug\AkkaNFe.exe
+C:\works\akka-test-nfe\AkkaNFe\obj\Debug\AkkaNFe.pdb

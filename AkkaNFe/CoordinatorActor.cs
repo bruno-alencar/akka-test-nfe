@@ -37,9 +37,12 @@ namespace AkkaNFe
         }
 
 
-        public void Start ()
+        public void Start()
         {
+
             Console.WriteLine("chego");
+
+
         }
     }
 }
