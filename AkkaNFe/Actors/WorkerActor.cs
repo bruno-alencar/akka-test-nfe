@@ -109,6 +109,12 @@ namespace AkkaNFe
                 Sender.Tell(new CheckAuthorization(signed.InvoiceControl));
             });
 
+            Receive<CheckAuthorization>(check =>
+            {
+                Console.WriteLine("CheckAuthorization id " + check.InvoiceControl.IdInvoice + "data " + check.InvoiceControl.OnStart);
+                Sender.Tell(new MergeSigned(check.InvoiceControl));
+            });
+
             Receive<MergeSigned>(merge =>
             {
                 Console.WriteLine("MergeSigned id " + merge.InvoiceControl.IdInvoice + "data " + merge.InvoiceControl.OnStart);

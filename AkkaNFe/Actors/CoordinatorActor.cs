@@ -93,6 +93,11 @@ namespace AkkaNFe
                 _works.Tell(signed);
             });
 
+            Receive<SendSignedBatch>(signed =>
+            {
+                _works.Tell(signed);
+            });
+
 
             Sender.Tell("OK");
         }
