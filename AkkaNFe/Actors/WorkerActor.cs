@@ -68,7 +68,7 @@ namespace AkkaNFe
 
         public WorkerActor()
         {
-            DoSomething();
+            WorkingService();
         }
 
         protected override void PreStart()
@@ -76,7 +76,7 @@ namespace AkkaNFe
 
         }
 
-        public void DoSomething()
+        public void WorkingService()
         {
             /*Receive<string>(job => {
                 var result = $"AEEEEEEEEEEEEEE {job}";

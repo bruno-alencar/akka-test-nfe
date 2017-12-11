@@ -93,11 +93,20 @@ namespace AkkaNFe
                 _works.Tell(signed);
             });
 
-            Receive<SendSignedBatch>(signed =>
+            Receive<CheckAuthorization>(check =>
             {
-                _works.Tell(signed);
+                _works.Tell(check);
             });
 
+            Receive<MergeSigned>(merge =>
+            {
+                _works.Tell(merge);
+            });
+
+            Receive<FinishProcess>(finish =>
+            {
+                
+            });
 
             Sender.Tell("OK");
         }
