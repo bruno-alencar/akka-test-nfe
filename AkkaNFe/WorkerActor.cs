@@ -17,11 +17,14 @@ namespace AkkaNFe
         protected override void PreStart()
         {
         }
+        IActorRef target = null;
 
         public void DoSomething()
         {
             Receive<string>(job => {
-                Console.WriteLine($"AEEEEEEEEEEEEEE {job}");
+                var result = $"AEEEEEEEEEEEEEE {job}";
+                Console.WriteLine(result);
+                Sender.Tell(result);
             });
         }
     }

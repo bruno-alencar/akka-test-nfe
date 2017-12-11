@@ -5,6 +5,13 @@ VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaNFe", "AkkaNFe\AkkaNFe.csproj", "{873B926E-3ED2-4562-BB50-89716687823A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C5676D4A-B276-4558-A89C-C9EC3A6C94AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaNFe.Tests", "AkkaNFe.Tests\AkkaNFe.Tests.csproj", "{FE5A801E-3BEA-41A7-8A55-1122BB12620F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{873B926E-3ED2-4562-BB50-89716687823A} = {873B926E-3ED2-4562-BB50-89716687823A}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +22,15 @@ Global
 		{873B926E-3ED2-4562-BB50-89716687823A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{873B926E-3ED2-4562-BB50-89716687823A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{873B926E-3ED2-4562-BB50-89716687823A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE5A801E-3BEA-41A7-8A55-1122BB12620F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5A801E-3BEA-41A7-8A55-1122BB12620F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5A801E-3BEA-41A7-8A55-1122BB12620F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5A801E-3BEA-41A7-8A55-1122BB12620F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FE5A801E-3BEA-41A7-8A55-1122BB12620F} = {C5676D4A-B276-4558-A89C-C9EC3A6C94AC}
 	EndGlobalSection
 EndGlobal
