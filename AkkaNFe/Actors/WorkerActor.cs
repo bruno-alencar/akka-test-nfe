@@ -60,6 +60,11 @@ namespace AkkaNFe
             }
         }
 
+        public class FinishProcess
+        {
+
+        }
+
 
         public WorkerActor()
         {
@@ -73,11 +78,43 @@ namespace AkkaNFe
 
         public void DoSomething()
         {
-            Receive<string>(job => {
+            /*Receive<string>(job => {
                 var result = $"AEEEEEEEEEEEEEE {job}";
                 Console.WriteLine(result);
                 Sender.Tell(result);
+            });*/
+
+            Receive<Guid>(id => {
+                Console.WriteLine("passou pelo id " + id);
+                Sender.Tell(new QueueSend(
+                    new InvoiceControl { IdInvoice = id, OnStart = DateTimeOffset.UtcNow }));
+
             });
+
+            Receive<QueueSend>(queue =>
+            {
+                Console.WriteLine("QueueSend id " + queue.InvoiceControl.IdInvoice + "data " + queue.InvoiceControl.OnStart);
+                Sender.Tell(new DefineNumber(queue.InvoiceControl));
+            });
+
+            Receive<DefineNumber>(number =>
+            {
+                Console.WriteLine("DefineNumber id " + number.InvoiceControl.IdInvoice + "data " + number.InvoiceControl.OnStart);
+                Sender.Tell(new SendSignedBatch(number.InvoiceControl));
+            });
+
+            Receive<SendSignedBatch>(signed =>
+            {
+                Console.WriteLine("SendSignedBatch id " + signed.InvoiceControl.IdInvoice + "data " + signed.InvoiceControl.OnStart);
+                Sender.Tell(new CheckAuthorization(signed.InvoiceControl));
+            });
+
+            Receive<MergeSigned>(merge =>
+            {
+                Console.WriteLine("MergeSigned id " + merge.InvoiceControl.IdInvoice + "data " + merge.InvoiceControl.OnStart);
+                Sender.Tell(new FinishProcess());
+            });
+
         }
     }
 }

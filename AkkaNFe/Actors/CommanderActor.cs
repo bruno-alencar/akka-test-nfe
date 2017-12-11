@@ -57,7 +57,7 @@ namespace AkkaNFe
 
         private void Asking(string text)
         {
-            _coordinator.Tell(new CoordinatorActor.Message(text));
+            _coordinator.Tell(new CoordinatorActor.JobInvoice(new InvoiceControl { IdInvoice = new Guid("403b3e6a-fb18-428a-acbd-cf6ea9b11fba") }));
 
             Sender.Tell("OK");
             /*Receive<string>(job =>

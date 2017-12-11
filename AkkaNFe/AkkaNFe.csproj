@@ -57,6 +57,7 @@
     <Compile Include="Actors\CommanderActor.cs" />
     <Compile Include="Actors\CoordinatorActor.cs" />
     <Compile Include="Actors\InputDataActor.cs" />
+    <Compile Include="InvoiceControl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Actors\WorkerActor.cs" />
