@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Configuration;
 using Akka.Routing;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace AkkaNFe
 
         public CoordinatorActor()
         {
-            Receive<Message>(job =>
+             Receive<Message>(job =>
             {
                 Start(job.Text);
             });
@@ -34,7 +35,7 @@ namespace AkkaNFe
         protected override void PreStart()
         {
             _works = Context.ActorOf(Props.Create(() => new WorkerActor())
-                .WithRouter(new RoundRobinPool(10)), ActorPath.Worker.Name);
+                .WithRouter(new RoundRobinPool(5, new DefaultResizer(1 , 10))), ActorPath.Worker.Name);
             base.PreStart();
         }
 
