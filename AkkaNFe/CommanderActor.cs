@@ -39,7 +39,7 @@ namespace AkkaNFe
         public void PoolCoordinator()
         {
             Receive<InputMessage>(x => {
-                BecomeAsking();
+                Asking(x.Text);
             });
         }
 
@@ -49,15 +49,17 @@ namespace AkkaNFe
 
             //block, but ask the router for the number of routees. Avoids magic numbers.
             pendingJobReplies = 1;// _coordinator.Ask<Routees>(new GetRoutees()).Result.Members.Count();
-            Asking();
+            //Asking();
 
             //send ourselves a ReceiveTimeout message if no message within 3 seonds
             //Context.SetReceiveTimeout(TimeSpan.FromSeconds(3));
         }
 
-        private void Asking()
+        private void Asking(string text)
         {
-            _coordinator.Tell(new CoordinatorActor.Message("sssss"));
+            _coordinator.Tell(new CoordinatorActor.Message(text));
+
+            Sender.Tell("OK");
             /*Receive<string>(job =>
             {
                 //_canAcceptJobSender.Tell(job);

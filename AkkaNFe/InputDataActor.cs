@@ -36,7 +36,7 @@ namespace AkkaNFe
         {
             var text = Console.ReadLine();
             _commander.Tell(new CommanderActor.InputMessage(text));
+            Sender.Tell("OK");
         }
-
     }
 }
