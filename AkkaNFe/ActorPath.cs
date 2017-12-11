@@ -11,7 +11,7 @@ namespace AkkaNFe
         public static readonly ActorMetaData InitConsole = new ActorMetaData("init", "akka://NFeIssuanceActors/user/init");
         public static readonly ActorMetaData Read = new ActorMetaData("read", "akka://NFeIssuanceActors/user/read");
         public static readonly ActorMetaData Coordinator = new ActorMetaData("coordinator", "akka://NFeIssuanceActors/user/read/coordinator");
-        public static readonly ActorMetaData Worker = new ActorMetaData("worker", "akka://NFeIssuanceActors/user/read/worker");
+        public static readonly ActorMetaData Worker = new ActorMetaData("worker", "akka://NFeIssuanceActors/user/init/read/coordinator/worker");
     }
 
     /// <summary>
