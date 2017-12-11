@@ -11,11 +11,13 @@ namespace AkkaNFe
 {
     public class CoordinatorActor : ReceiveActor
     {
+        private IActorRef _works;
+
         public CoordinatorActor()
         {
             Receive<Message>(job =>
             {
-                Start();
+                Start(job.Text);
             });
         }
 
@@ -31,18 +33,15 @@ namespace AkkaNFe
 
         protected override void PreStart()
         {
-            /* Context.ActorOf(Props.Create(() => new GithubWorkerActor(GithubClientFactory.GetClient))
-                 .WithRouter(new RoundRobinPool(10)));*/
-
+            _works = Context.ActorOf(Props.Create(() => new WorkerActor())
+                .WithRouter(new RoundRobinPool(10)), ActorPath.Worker.Name);
+            base.PreStart();
         }
 
-
-        public void Start()
+        public void Start(string message)
         {
-
-            Console.WriteLine("chego");
-
-
+            _works.Tell(message);
+            Sender.Tell("OK");
         }
     }
 }
