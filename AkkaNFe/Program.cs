@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using AkkaNFe.Actors;
 
 namespace AkkaNFe
 {
@@ -11,6 +12,9 @@ namespace AkkaNFe
         {
             NFeIssuanceActors = ActorSystem.Create("NFeIssuanceActors");
 
+            NFeIssuanceActors.ActorOf(Props.Create(() => new GeneratorActor()), ActorPaths.Generator.Name);
+            NFeIssuanceActors.ActorOf(Props.Create(() => new CommanderActor()), ActorPaths.Commander.Name);
+
             var init = NFeIssuanceActors.ActorOf(Props.Create(() => new InputDataActor()), ActorPaths.InitConsole.Name);
             init.Tell("start");
 
@@ -18,3 +22,4 @@ namespace AkkaNFe
         }
     }
 }
+    

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AkkaNFe.Models;
+using System;
 
 namespace AkkaNFe
 {
@@ -8,5 +9,8 @@ namespace AkkaNFe
         public int Retry { get; set; }
         public DateTimeOffset StartedOn { get; set; }
         public DateTimeOffset FinishedOn { get; set; }
+
+        //deprecated
+        public RequestInvoice RequestInvoice { get; set; }
     }
 }

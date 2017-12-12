@@ -21,9 +21,9 @@ namespace AkkaNFe
 
         public class CanAcceptJob
         {
-            public CanAcceptJob(ControlInvoice requestInvoice)
+            public CanAcceptJob(ControlInvoice controlInvoice)
             {
-                this.ControlInvoice = requestInvoice;
+                this.ControlInvoice = controlInvoice;
             }
 
             public ControlInvoice ControlInvoice { get; private set; }

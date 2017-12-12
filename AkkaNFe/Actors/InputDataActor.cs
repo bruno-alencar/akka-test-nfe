@@ -1,11 +1,12 @@
 ﻿using Akka.Actor;
+using AkkaNFe.Actors;
+using AkkaNFe.Models;
 using System;
 
 namespace AkkaNFe
 {
     public class InputDataActor : ReceiveActor
     {
-        private IActorRef _commander;
         public const string StartCommand = "start";
 
         public InputDataActor()
@@ -24,14 +25,17 @@ namespace AkkaNFe
 
         protected override void PreStart()
         {
-            _commander = Context.ActorOf(Props.Create(() => new CommanderActor()), ActorPaths.Read.Name);
+            //_commander = Context.ActorOf(Props.Create(() => new CommanderActor()), ActorPaths.Read.Name);
+            //_generator = Context.ActorOf(Props.Create(() => new GeneratorActor()), ActorPaths.Generator.Name);
             base.PreStart();
         }
 
         private void InputDataConsole()
         {
             var text = Console.ReadLine();
-            _commander.Tell(new CommanderActor.CanAcceptJob(new ControlInvoice { InvoiceId = new Guid("403b3e6a-fb18-428a-acbd-cf6ea9b11fba") }));
+
+            var requestInvoice = new RequestInvoice();
+            Context.ActorSelection(ActorPaths.Generator.Path).Tell(requestInvoice);
         }
     }
 }
