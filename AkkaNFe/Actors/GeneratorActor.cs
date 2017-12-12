@@ -37,11 +37,9 @@ namespace AkkaNFe.Actors
                     }));
             });
 
-            ////yes
-            //Receive<GithubCommanderActor.UnableToAcceptJob>(job => Context.ActorSelection(ActorPaths.MainFormActor.Path).Tell(job));
+            Receive<CommanderActor.UnableToAcceptJob>(job => Context.ActorSelection(ActorPaths.Commander.Path).Tell(job));
 
-            ////no
-            //Receive<GithubCommanderActor.AbleToAcceptJob>(job => Context.ActorSelection(ActorPaths.MainFormActor.Path).Tell(job));
+            Receive<CommanderActor.AbleToAcceptJob>(job => Context.ActorSelection(ActorPaths.Commander.Path).Tell(job));
         }
     }
 }

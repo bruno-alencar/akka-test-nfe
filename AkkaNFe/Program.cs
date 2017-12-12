@@ -5,7 +5,6 @@ namespace AkkaNFe
 {
     class Program
     {
-
         public static ActorSystem NFeIssuanceActors;
 
         static void Main(string[] args)

@@ -65,7 +65,7 @@ namespace AkkaNFe
         protected override void PreStart()
         {
             _coordinator = Context.ActorOf(Props.Create(() => new CoordinatorActor())
-                                  .WithRouter(new BroadcastPool(1)),
+                                  .WithRouter(new SmallestMailboxPool(3)),
                             ActorPaths.Coordinator.Name);
 
             base.PreStart();
