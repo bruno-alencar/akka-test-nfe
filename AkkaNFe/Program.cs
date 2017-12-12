@@ -1,9 +1,4 @@
 ﻿using Akka.Actor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AkkaNFe
 {
@@ -16,7 +11,7 @@ namespace AkkaNFe
         {
             NFeIssuanceActors = ActorSystem.Create("NFeIssuanceActors");
 
-            var init = NFeIssuanceActors.ActorOf(Props.Create(() => new InputDataActor()), ActorPath.InitConsole.Name);
+            var init = NFeIssuanceActors.ActorOf(Props.Create(() => new InputDataActor()), ActorPaths.InitConsole.Name);
             init.Tell("start");
 
             NFeIssuanceActors.WhenTerminated.Wait();

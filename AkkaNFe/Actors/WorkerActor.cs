@@ -1,9 +1,5 @@
 ﻿using Akka.Actor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AkkaNFe
 {
@@ -12,9 +8,9 @@ namespace AkkaNFe
         #region Messages
         public class QueueSend
         {
-            public InvoiceControl InvoiceControl { get; private set; }
+            public ControlInvoice InvoiceControl { get; private set; }
 
-            public QueueSend(InvoiceControl invoice)
+            public QueueSend(ControlInvoice invoice)
             {
                 InvoiceControl = invoice;
             }
@@ -22,9 +18,9 @@ namespace AkkaNFe
 
         public class DefineNumber
         {
-            public InvoiceControl InvoiceControl { get; private set; }
+            public ControlInvoice InvoiceControl { get; private set; }
 
-            public DefineNumber(InvoiceControl invoice)
+            public DefineNumber(ControlInvoice invoice)
             {
                 InvoiceControl = invoice;
             }
@@ -32,9 +28,9 @@ namespace AkkaNFe
 
         public class SendSignedBatch
         {
-            public InvoiceControl InvoiceControl { get; private set; }
+            public ControlInvoice InvoiceControl { get; private set; }
 
-            public SendSignedBatch(InvoiceControl invoice)
+            public SendSignedBatch(ControlInvoice invoice)
             {
                 InvoiceControl = invoice;
             }
@@ -42,9 +38,9 @@ namespace AkkaNFe
 
         public class CheckAuthorization
         {
-            public InvoiceControl InvoiceControl { get; private set; }
+            public ControlInvoice InvoiceControl { get; private set; }
 
-            public CheckAuthorization(InvoiceControl invoice)
+            public CheckAuthorization(ControlInvoice invoice)
             {
                 InvoiceControl = invoice;
             }
@@ -52,18 +48,25 @@ namespace AkkaNFe
 
         public class MergeSigned
         {
-            public InvoiceControl InvoiceControl { get; private set; }
+            public ControlInvoice InvoiceControl { get; private set; }
 
-            public MergeSigned(InvoiceControl invoice)
+            public MergeSigned(ControlInvoice invoice)
             {
                 InvoiceControl = invoice;
             }
         }
 
-        public class FinishProcess
-        {
+        public class StartJob {
+            public ControlInvoice InvoiceControl { get; private set; }
 
+            public StartJob(ControlInvoice invoice)
+            {
+                InvoiceControl = invoice;
+            }
         }
+
+        public class FinishProcess { }
+
         #endregion
 
         public WorkerActor()
@@ -73,14 +76,9 @@ namespace AkkaNFe
 
         public void WorkingService()
         {
-            Receive<Guid>(id => {
-                Console.WriteLine("passou pelo id " + id);
-                Sender.Tell(new QueueSend(
-                        new InvoiceControl
-                        {
-                            InvoiceId = id, StartedOn = DateTimeOffset.UtcNow
-                        }
-                    ));
+            Receive<StartJob>(job => {
+                Console.WriteLine("passou pelo id " + job.InvoiceControl.InvoiceId);
+                Sender.Tell(new QueueSend(job.InvoiceControl));
             });
 
             Receive<QueueSend>(queue =>

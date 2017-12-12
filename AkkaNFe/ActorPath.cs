@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AkkaNFe
+﻿namespace AkkaNFe
 {
-    public static class ActorPath
+    public static class ActorPaths
     {
         public static readonly ActorMetaData InitConsole = new ActorMetaData("init", "akka://NFeIssuanceActors/user/init");
         public static readonly ActorMetaData Read = new ActorMetaData("read", "akka://NFeIssuanceActors/user/read");

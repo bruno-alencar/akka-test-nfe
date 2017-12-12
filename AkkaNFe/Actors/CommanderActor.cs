@@ -1,24 +1,13 @@
 ﻿using Akka.Actor;
 using Akka.Routing;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AkkaNFe
 {
-    public class CommanderActor : ReceiveActor
+    public class CommanderActor : ReceiveActor, IWithUnboundedStash
     {
-
-        private IActorRef _coordinator;
-        private IActorRef _canAcceptJobSender;
-        private int pendingJobReplies;
-
-        public CommanderActor()
-        {
-            PoolCoordinator();
-        }
+        #region Message classes
 
         public class InputMessage
         {
@@ -30,16 +19,65 @@ namespace AkkaNFe
             }
         }
 
+        public class CanAcceptJob
+        {
+            public CanAcceptJob(ControlInvoice requestInvoice)
+            {
+                this.ControlInvoice = requestInvoice;
+            }
+
+            public ControlInvoice ControlInvoice { get; private set; }
+        }
+
+        public class AbleToAcceptJob
+        {
+            public AbleToAcceptJob(ControlInvoice controlInvoice)
+            {
+                this.controlInvoice = controlInvoice;
+            }
+
+            public ControlInvoice controlInvoice { get; private set; }
+        }
+
+        public class UnableToAcceptJob
+        {
+            public UnableToAcceptJob(ControlInvoice controlInvoice)
+            {
+                this.ControlInvoice = controlInvoice;
+            }
+
+            public ControlInvoice ControlInvoice { get; private set; }
+        }
+
+        #endregion
+
+        public IStash Stash { get; set; }
+        private IActorRef _coordinator;
+        private IActorRef _canAcceptJobSender;
+        private int pendingJobReplies;
+        private ControlInvoice _controlInvoice;
+
+        public CommanderActor()
+        {
+            Ready();
+        }
+
         protected override void PreStart()
         {
-            _coordinator = Context.ActorOf(Props.Create(() => new CoordinatorActor()), ActorPath.Coordinator.Name);
+            _coordinator = Context.ActorOf(Props.Create(() => new CoordinatorActor())
+                                  .WithRouter(new BroadcastPool(1)),
+                            ActorPaths.Coordinator.Name);
+
             base.PreStart();
         }
 
-        public void PoolCoordinator()
+        private void Ready()
         {
-            Receive<InputMessage>(x => {
-                Asking(x.Text);
+            Receive<CanAcceptJob>(job =>
+            {
+                _coordinator.Tell(job);
+                _controlInvoice = job.ControlInvoice;
+                BecomeAsking();
             });
         }
 
@@ -48,28 +86,53 @@ namespace AkkaNFe
             _canAcceptJobSender = Sender;
 
             //block, but ask the router for the number of routees. Avoids magic numbers.
-            pendingJobReplies = 1;// _coordinator.Ask<Routees>(new GetRoutees()).Result.Members.Count();
-            //Asking();
+            pendingJobReplies = _coordinator.Ask<Routees>(new GetRoutees()).Result.Members.Count();
+            Become(Asking);
 
             //send ourselves a ReceiveTimeout message if no message within 3 seonds
-            //Context.SetReceiveTimeout(TimeSpan.FromSeconds(3));
+            Context.SetReceiveTimeout(TimeSpan.FromSeconds(60));
         }
 
-        private void Asking(string text)
+        private void Asking()
         {
-            _coordinator.Tell(new CoordinatorActor.JobInvoice(new InvoiceControl { InvoiceId = new Guid("403b3e6a-fb18-428a-acbd-cf6ea9b11fba") }));
+            //stash any subsequent requests
+            Receive<CanAcceptJob>(job => Stash.Stash());
 
-            Sender.Tell("OK");
-            /*Receive<string>(job =>
+            //means at least one actor failed to respond
+            Receive<ReceiveTimeout>(timeout =>
             {
-                //_canAcceptJobSender.Tell(job);
+                _canAcceptJobSender.Tell(new UnableToAcceptJob(_controlInvoice));
+                BecomeReady();
+            });
+
+            Receive<UnableToAcceptJob>(job =>
+            {
+                pendingJobReplies--;
+                if (pendingJobReplies == 0)
+                {
+                    _canAcceptJobSender.Tell(job);
+                    BecomeReady();
+                }
+            });
+
+            Receive((AbleToAcceptJob job) =>
+            {
+                _canAcceptJobSender.Tell(job);
 
                 //start processing messages
-                //_coordinator.Tell(new CoordinatorActor.Message(job));
+                _coordinator.Tell(new CoordinatorActor.BeginJob(job.controlInvoice));
 
-            });*/
+                // get pattern
+                BecomeReady();
+            });
         }
 
+        private void BecomeReady()
+        {
+            Become(Ready);
+            Stash.UnstashAll();
 
+            Context.SetReceiveTimeout(null);
+        }
     }
 }

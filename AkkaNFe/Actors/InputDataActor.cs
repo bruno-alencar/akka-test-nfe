@@ -1,9 +1,5 @@
 ﻿using Akka.Actor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AkkaNFe
 {
@@ -28,15 +24,14 @@ namespace AkkaNFe
 
         protected override void PreStart()
         {
-            _commander = Context.ActorOf(Props.Create(() => new CommanderActor()), ActorPath.Read.Name);
+            _commander = Context.ActorOf(Props.Create(() => new CommanderActor()), ActorPaths.Read.Name);
             base.PreStart();
         }
 
         private void InputDataConsole()
         {
             var text = Console.ReadLine();
-            _commander.Tell(new CommanderActor.InputMessage(text));
-            Sender.Tell("OK");
+            _commander.Tell(new CommanderActor.CanAcceptJob(new ControlInvoice { InvoiceId = new Guid("403b3e6a-fb18-428a-acbd-cf6ea9b11fba") }));
         }
     }
 }

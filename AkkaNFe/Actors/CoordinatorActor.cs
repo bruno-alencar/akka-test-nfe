@@ -1,12 +1,5 @@
 ﻿using Akka.Actor;
-using Akka.Configuration;
 using Akka.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using static AkkaNFe.WorkerActor;
 
 namespace AkkaNFe
@@ -14,7 +7,6 @@ namespace AkkaNFe
     public class CoordinatorActor : ReceiveActor
     {
         private IActorRef _works;
-        private Guid _idInvoice;
 
         #region Messages
         public class Message
@@ -27,11 +19,11 @@ namespace AkkaNFe
             }
         }
 
-        public class JobInvoice
+        public class BeginJob
         {
-            public InvoiceControl InvoiceControl { get; private set; }
+            public ControlInvoice InvoiceControl { get; private set; }
 
-            public JobInvoice(InvoiceControl invoice)
+            public BeginJob(ControlInvoice invoice)
             {
                 InvoiceControl = invoice;
             }
@@ -40,34 +32,30 @@ namespace AkkaNFe
 
         public CoordinatorActor()
         {
-            Pass();
+            Waiting();
         }
 
         protected override void PreStart()
         {
             _works = Context.ActorOf(Props.Create(() => new WorkerActor())
-                .WithRouter(new RoundRobinPool(5, new DefaultResizer(1, 10))), ActorPath.Worker.Name);
+                .WithRouter(new RoundRobinPool(5, new DefaultResizer(1, 10))), ActorPaths.Worker.Name);
             base.PreStart();
         }
 
-        public void Pass()
+        public void Waiting()
         {
-            Receive<JobInvoice>(x =>
+            Receive<CommanderActor.CanAcceptJob>(job => Sender.Tell(new CommanderActor.AbleToAcceptJob(job.ControlInvoice)));
+            Receive<BeginJob>(job =>
             {
-                PreparingWork(x.InvoiceControl);
+                Become(Working);
+
+                // message to start process
+                _works.Tell(new StartJob( invoice: job.InvoiceControl));
             });
         }
 
-        public void PreparingWork(InvoiceControl invoice)
+        public void Working()
         {
-            _idInvoice = invoice.InvoiceId;
-            Become(InvoiceWorking);
-        }
-
-        public void InvoiceWorking()
-        {
-            _works.Tell(_idInvoice);
-
             Receive<QueueSend>(queue =>
             {
                 _works.Tell(queue);
