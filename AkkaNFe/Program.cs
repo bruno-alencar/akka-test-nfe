@@ -14,11 +14,9 @@ namespace AkkaNFe
 
         static void Main(string[] args)
         {
-
             NFeIssuanceActors = ActorSystem.Create("NFeIssuanceActors");
 
             var init = NFeIssuanceActors.ActorOf(Props.Create(() => new InputDataActor()), ActorPath.InitConsole.Name);
-
             init.Tell("start");
 
             NFeIssuanceActors.WhenTerminated.Wait();

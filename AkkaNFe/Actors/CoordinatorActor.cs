@@ -16,17 +16,7 @@ namespace AkkaNFe
         private IActorRef _works;
         private Guid _idInvoice;
 
-        public CoordinatorActor()
-        {
-            /*Receive<Message>(job =>
-            {
-                Become(Pass);
-            });*/
-
-            Pass();
-
-        }
-
+        #region Messages
         public class Message
         {
             public string Text { get; set; }
@@ -37,7 +27,6 @@ namespace AkkaNFe
             }
         }
 
-
         public class JobInvoice
         {
             public InvoiceControl InvoiceControl { get; private set; }
@@ -47,8 +36,12 @@ namespace AkkaNFe
                 InvoiceControl = invoice;
             }
         }
+        #endregion
 
-
+        public CoordinatorActor()
+        {
+            Pass();
+        }
 
         protected override void PreStart()
         {
@@ -61,18 +54,15 @@ namespace AkkaNFe
         {
             Receive<JobInvoice>(x =>
             {
-
-            PreparingWork(x.InvoiceControl);
-
+                PreparingWork(x.InvoiceControl);
             });
         }
 
         public void PreparingWork(InvoiceControl invoice)
         {
-            _idInvoice = invoice.IdInvoice;
+            _idInvoice = invoice.InvoiceId;
             Become(InvoiceWorking);
         }
-
 
         public void InvoiceWorking()
         {
@@ -105,13 +95,10 @@ namespace AkkaNFe
 
             Receive<FinishProcess>(finish =>
             {
-                
+
             });
 
             Sender.Tell("OK");
         }
-
-
-
     }
 }

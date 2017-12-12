@@ -8,9 +8,9 @@ namespace AkkaNFe
 {
     public class InvoiceControl
     {
-        public Guid IdInvoice { get; set; }
+        public Guid InvoiceId { get; set; }
         public int Retry { get; set; }
-        public DateTimeOffset OnStart { get; set; }
-        public DateTimeOffset OnFinish { get; set; }
+        public DateTimeOffset StartedOn { get; set; }
+        public DateTimeOffset FinishedOn { get; set; }
     }
 }

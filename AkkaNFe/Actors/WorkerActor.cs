@@ -9,7 +9,7 @@ namespace AkkaNFe
 {
     public class WorkerActor : ReceiveActor
     {
-
+        #region Messages
         public class QueueSend
         {
             public InvoiceControl InvoiceControl { get; private set; }
@@ -64,63 +64,54 @@ namespace AkkaNFe
         {
 
         }
-
+        #endregion
 
         public WorkerActor()
         {
             WorkingService();
         }
 
-        protected override void PreStart()
-        {
-
-        }
-
         public void WorkingService()
         {
-            /*Receive<string>(job => {
-                var result = $"AEEEEEEEEEEEEEE {job}";
-                Console.WriteLine(result);
-                Sender.Tell(result);
-            });*/
-
             Receive<Guid>(id => {
                 Console.WriteLine("passou pelo id " + id);
                 Sender.Tell(new QueueSend(
-                    new InvoiceControl { IdInvoice = id, OnStart = DateTimeOffset.UtcNow }));
-
+                        new InvoiceControl
+                        {
+                            InvoiceId = id, StartedOn = DateTimeOffset.UtcNow
+                        }
+                    ));
             });
 
             Receive<QueueSend>(queue =>
             {
-                Console.WriteLine("QueueSend id " + queue.InvoiceControl.IdInvoice + "data " + queue.InvoiceControl.OnStart);
+                Console.WriteLine("QueueSend id " + queue.InvoiceControl.InvoiceId + "data " + queue.InvoiceControl.StartedOn);
                 Sender.Tell(new DefineNumber(queue.InvoiceControl));
             });
 
             Receive<DefineNumber>(number =>
             {
-                Console.WriteLine("DefineNumber id " + number.InvoiceControl.IdInvoice + "data " + number.InvoiceControl.OnStart);
+                Console.WriteLine("DefineNumber id " + number.InvoiceControl.InvoiceId + "data " + number.InvoiceControl.StartedOn);
                 Sender.Tell(new SendSignedBatch(number.InvoiceControl));
             });
 
             Receive<SendSignedBatch>(signed =>
             {
-                Console.WriteLine("SendSignedBatch id " + signed.InvoiceControl.IdInvoice + "data " + signed.InvoiceControl.OnStart);
+                Console.WriteLine("SendSignedBatch id " + signed.InvoiceControl.InvoiceId + "data " + signed.InvoiceControl.StartedOn);
                 Sender.Tell(new CheckAuthorization(signed.InvoiceControl));
             });
 
             Receive<CheckAuthorization>(check =>
             {
-                Console.WriteLine("CheckAuthorization id " + check.InvoiceControl.IdInvoice + "data " + check.InvoiceControl.OnStart);
+                Console.WriteLine("CheckAuthorization id " + check.InvoiceControl.InvoiceId + "data " + check.InvoiceControl.StartedOn);
                 Sender.Tell(new MergeSigned(check.InvoiceControl));
             });
 
             Receive<MergeSigned>(merge =>
             {
-                Console.WriteLine("MergeSigned id " + merge.InvoiceControl.IdInvoice + "data " + merge.InvoiceControl.OnStart);
+                Console.WriteLine("MergeSigned id " + merge.InvoiceControl.InvoiceId + "data " + merge.InvoiceControl.StartedOn);
                 Sender.Tell(new FinishProcess());
             });
-
         }
     }
 }
